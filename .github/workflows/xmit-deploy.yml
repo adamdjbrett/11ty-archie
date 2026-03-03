@@ -65,9 +65,14 @@ jobs:
       - name: Verify required static assets
         run: |
           required_files=(
-            "_site/icons/search.svg"
-            "_site/icons/social/twitter.svg"
-            "_site/icons/social/github.svg"
+            "_site/index.html"
+            "_site/icon/favicon.png"
+            "_site/css/main.css"
+            "_site/css/dark.css"
+            "_site/js/themetoggle.js"
+            "_site/feed/feed.xml"
+            "_site/pagefind/pagefind-ui.css"
+            "_site/pagefind/pagefind-ui.js"
           )
           for f in "${required_files[@]}"; do
             if [ ! -f "$f" ]; then
@@ -105,9 +110,11 @@ jobs:
         run: |
           required_files=(
             "_site/index.html"
-            "_site/icons/search.svg"
-            "_site/icons/social/twitter.svg"
-            "_site/icons/social/github.svg"
+            "_site/icon/favicon.png"
+            "_site/css/main.css"
+            "_site/css/dark.css"
+            "_site/js/themetoggle.js"
+            "_site/feed/feed.xml"
             "_site/pagefind/pagefind-ui.css"
             "_site/pagefind/pagefind-ui.js"
           )
