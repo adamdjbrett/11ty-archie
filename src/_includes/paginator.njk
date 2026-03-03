@@ -1,0 +1,6 @@
+{% if pagination.href.previous or pagination.href.next %}
+<nav aria-label="Pagination">
+  {% if pagination.href.previous %}<a href="{{ pagination.href.previous }}">← Newer</a>{% endif %}
+  {% if pagination.href.next %}<a href="{{ pagination.href.next }}">Older →</a>{% endif %}
+</nav>
+{% endif %}

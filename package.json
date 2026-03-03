@@ -1,0 +1,25 @@
+{
+  "name": "archie-eleventy",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "rm -rf _site && eleventy && pagefind --site _site --glob \"**/*.html\"",
+    "start": "eleventy --serve --incremental"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "3.1.2",
+    "@11ty/eleventy-plugin-rss": "^2.0.2",
+    "eleventy-plugin-toc": "^1.1.5",
+    "js-yaml": "^4.1.0",
+    "luxon": "^3.5.0",
+    "markdown-it": "^14.1.0",
+    "markdown-it-anchor": "^9.2.0",
+    "markdown-it-attrs": "^4.3.1",
+    "markdown-it-footnote": "^4.0.0",
+    "pagefind": "^1.4.0"
+  }
+}

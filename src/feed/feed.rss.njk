@@ -1,0 +1,23 @@
+---
+permalink: /feed/feed.rss
+eleventyExcludeFromCollections: true
+---
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>{{ metadata.title }}</title>
+    <link>{{ metadata.url }}/</link>
+    <description>{{ metadata.description }}</description>
+    <atom:link href="{{ metadata.url }}/feed/feed.rss" rel="self" type="application/rss+xml" />
+    <lastBuildDate>{% if collections.posts[0] %}{{ collections.posts[0].date | rfc822Date }}{% else %}{{ metadata.deploy_date | rfc822Date }}{% endif %}</lastBuildDate>
+    {% for post in collections.posts %}
+    <item>
+      <title>{{ post.data.title }}</title>
+      <link>{{ metadata.url }}{{ post.url }}</link>
+      <guid>{{ metadata.url }}{{ post.url }}</guid>
+      <pubDate>{{ post.date | rfc822Date }}</pubDate>
+      <description>{{ post.data.description or '' }}</description>
+    </item>
+    {% endfor %}
+  </channel>
+</rss>

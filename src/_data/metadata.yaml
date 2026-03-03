@@ -1,0 +1,34 @@
+title: Archie
+description: Minimal and clean blog theme ported to Eleventy.
+subtitle: Minimal and Clean blog theme inspired by athul/archie.
+language: en
+url: http://localhost:8080
+author:
+  name: Athul
+  email: athul@example.com
+copyright: "© Athul"
+deploy_date: 2026-03-03
+favicon: /icon/favicon.png
+favicons:
+  - /icon/favicon.png
+  - /icon/favicon.png
+  - /icon/favicon.png
+social:
+  - name: GitHub
+    url: https://github.com/athul/archie
+    icon: github
+  - name: Twitter
+    url: https://github.com/athulcajay/
+    icon: twitter
+  - name: GitLab
+    url: https://gitlab.com/athul/
+    icon: gitlab
+navigation:
+  - label: Home
+    url: /
+  - label: All posts
+    url: /blog/
+  - label: About
+    url: /about/
+  - label: Tags
+    url: /tags/

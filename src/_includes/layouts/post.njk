@@ -1,0 +1,46 @@
+---
+layout: layouts/base.njk
+---
+<article class="h-entry">
+  <h1 class="p-name">{{ title }}</h1>
+  <p class="meta">
+    <time class="dt-published" datetime="{{ date | htmlDateString }}">{{ date | readableDate }}</time>
+    {% if tags and tags.length %}
+    ·
+    {% for tag in tags %}<a href="/tags/{{ tag | slug }}/">#{{ tag }}</a>{% if not loop.last %} {% endif %}{% endfor %}
+    {% endif %}
+  </p>
+  <a class="u-url" href="{{ metadata.url }}{{ page.url }}" style="display:none;">Permalink</a>
+  {% set generatedToc = content | toc %}
+  {% if generatedToc %}
+  <aside aria-label="Table of contents">
+    {{ generatedToc | safe }}
+  </aside>
+  {% endif %}
+  <div class="e-content">
+    {{ content | safe }}
+  </div>
+
+  {% set newer = collections.posts | getPreviousCollectionItem(page) %}
+  {% set older = collections.posts | getNextCollectionItem(page) %}
+  <nav class="post-nav" aria-label="Post navigation">
+    {% if newer %}<a href="{{ newer.url }}">← {{ newer.data.title }}</a>{% endif %}
+    {% if older %}<a href="{{ older.url }}">{{ older.data.title }} →</a>{% endif %}
+  </nav>
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": {{ title | dump | safe }},
+      "description": {{ (description or metadata.description) | dump | safe }},
+      "datePublished": {{ date | isoDate | dump | safe }},
+      "dateModified": {{ date | isoDate | dump | safe }},
+      "mainEntityOfPage": {{ (metadata.url + page.url) | dump | safe }},
+      "author": {
+        "@type": "Person",
+        "name": {{ (author or metadata.author.name) | dump | safe }}
+      }
+    }
+  </script>
+</article>

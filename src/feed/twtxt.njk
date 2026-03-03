@@ -1,0 +1,6 @@
+---
+permalink: /feed/twtxt.txt
+eleventyExcludeFromCollections: true
+---
+{% for post in collections.posts %}{{ post.date | htmlDateString }}T00:00:00Z\t{{ metadata.title }}: {{ metadata.url }}{{ post.url }}{% if not loop.last %}
+{% endif %}{% endfor %}

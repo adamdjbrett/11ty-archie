@@ -1,0 +1,19 @@
+---
+permalink: /humans.txt
+eleventyExcludeFromCollections: true
+---
+/* TEAM */
+Site: {{ metadata.title }}
+Primary author: {{ metadata.author.name }} <{{ metadata.author.email }}>
+
+/* CONTRIBUTORS */
+{% for person in contributors.contributors %}{{ person.name }} <{{ person.email }}>
+{% endfor %}
+
+/* CO-AUTHORS */
+{% for person in contributors.coauthors %}{{ person.name }} <{{ person.email }}>
+{% endfor %}
+
+/* THANKS */
+Theme inspiration: athul/archie
+Generator: Eleventy {{ eleventyVersion }}
