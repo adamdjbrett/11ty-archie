@@ -1,6 +1,7 @@
-# archie-zola
+[![CI and Deploy to XMIT](https://github.com/adamdjbrett/11ty-archie/actions/workflows/xmit-deploy.yml/badge.svg?branch=main)](https://github.com/adamdjbrett/11ty-archie/actions/workflows/xmit-deploy.yml)
+# 11ty archie
 
-A clean, minimal Zola theme forked from [archie](https://github.com/athul/archie). Perfect for personal blogs and portfolios with dark/light mode support.
+A clean, minimal 11ty port of the zola theme forked from [archie](https://github.com/athul/archie). Perfect for personal blogs and portfolios with dark/light mode support.
 
 ## Table of Contents
 
