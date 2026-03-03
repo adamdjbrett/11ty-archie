@@ -1,0 +1,138 @@
+name: CI and Deploy to XMIT
+
+on:
+  push:
+    branches: ["**"]
+    paths:
+      - "src/**"
+      - "_data/**"
+      - "_includes/**"
+      - "sass/**"
+      - "scripts/**"
+      - "eleventy.config.js"
+      - "package.json"
+      - "package-lock.json"
+      - ".nvmrc"
+      - ".github/workflows/xmit-deploy.yml"
+  pull_request:
+    paths:
+      - "src/**"
+      - "_data/**"
+      - "_includes/**"
+      - "sass/**"
+      - "scripts/**"
+      - "eleventy.config.js"
+      - "package.json"
+      - "package-lock.json"
+      - ".nvmrc"
+      - ".github/workflows/xmit-deploy.yml"
+  workflow_dispatch:
+    inputs:
+      site:
+        description: "XMIT site/domain (e.g. archie.000000076.xyz@268)"
+        required: true
+        type: string
+
+concurrency:
+  group: ci-deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit --no-fund
+
+      - name: Build (CI)
+        run: npm run build:ci
+
+      - name: Verify required static assets
+        run: |
+          required_files=(
+            "_site/icons/search.svg"
+            "_site/icons/social/twitter.svg"
+            "_site/icons/social/github.svg"
+          )
+          for f in "${required_files[@]}"; do
+            if [ ! -f "$f" ]; then
+              echo "Missing required file: $f" >&2
+              exit 1
+            fi
+          done
+
+  deploy:
+    needs: ci
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'))
+    runs-on: ubuntu-latest
+    env:
+      XMIT_SITE: apollo.000000076.xyz@268
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit --no-fund
+
+      - name: Build Eleventy site
+        run: npm run build
+
+      - name: Verify build output
+        run: |
+          required_files=(
+            "_site/index.html"
+            "_site/icons/search.svg"
+            "_site/icons/social/twitter.svg"
+            "_site/icons/social/github.svg"
+            "_site/pagefind/pagefind-ui.css"
+            "_site/pagefind/pagefind-ui.js"
+          )
+          for f in "${required_files[@]}"; do
+            if [ ! -f "$f" ]; then
+              echo "Missing required file: $f" >&2
+              exit 1
+            fi
+          done
+
+      - name: Deploy to XMIT (CLI)
+        env:
+          XMIT_KEY: ${{ secrets.XMIT_KEY }}
+        run: |
+          if [ -z "$XMIT_KEY" ]; then
+            echo "XMIT_KEY secret is not set" >&2
+            exit 1
+          fi
+          SITE_INPUT="${{ github.event_name == 'workflow_dispatch' && inputs.site || '' }}"
+          if [ -n "$SITE_INPUT" ]; then
+            export XMIT_SITE="$SITE_INPUT"
+          fi
+          if [ -z "$XMIT_SITE" ]; then
+            echo "XMIT site/domain not provided." >&2
+            exit 1
+          fi
+          echo "Deploying _site to $XMIT_SITE via XMIT CLI"
+          npx @xmit.co/xmit "$XMIT_SITE" _site
